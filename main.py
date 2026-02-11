@@ -159,16 +159,22 @@ def generate_answer(query, search_results):
     context = "\n---\n".join(search_results)
 
     prompt = f"""
-    Ти — помічник-експерт. Використовуй ТІЛЬКИ наданий контекст, щоб відповісти на питання.
-    Якщо в контексті немає відповіді, скажи, що ти не знаєш.
+    You are an expert technical assistant. Your task is to answer the user's QUESTION based strictly on the provided CONTEXT.
 
-    КОНТЕКСТ:
+    ### GUIDELINES FOR YOUR RESPONSE:
+    1. **Source Fidelity**: Use ONLY the information from the CONTEXT provided below. Do not use outside knowledge.
+    2. **Missing Information**: If the answer is not contained within the CONTEXT, explicitly state that you do not have enough information to answer. Do not attempt to fabricate an answer.
+    3. **Structure**: Provide a clear, structured, and concise response. Use bullet points or numbered lists if appropriate for technical instructions.
+    4. **Tone**: Maintain a professional, helpful, and objective technical tone.
+    5. **Code Snippets**: If the CONTEXT contains code examples relevant to the answer, include them in your response using proper Markdown formatting.
+
+    ### CONTEXT:
     {context}
 
-    ПИТАННЯ:
+    ### QUESTION:
     {query}
 
-    ВІДПОВІДЬ:
+    ### FINAL ANSWER:
     """
 
     response = llm_model.generate_content(prompt)
